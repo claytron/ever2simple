@@ -81,7 +81,7 @@ class EverConverter(object):
         return html2plain.close()
 
     def _convert_csv(self, notes):
-        if self.simple_filename is None:
+        if self.stdout:
             simple_file = StringIO()
         else:
             simple_file = open(self.simple_filename, 'w')
@@ -90,11 +90,11 @@ class EverConverter(object):
         if self.stdout:
             simple_file.seek(0)
             # XXX: this is only for the StringIO right now
-            print simple_file.getvalue()
+            sys.stdout.write(simple_file.getvalue())
         simple_file.close()
 
     def _convert_json(self, notes):
         if self.simple_filename is None:
-            print json.dumps(notes)
+            sys.stdout.write(json.dumps(notes))
         else:
             json.dump(notes, self.simple_filename)
