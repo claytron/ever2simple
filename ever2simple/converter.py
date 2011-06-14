@@ -51,8 +51,8 @@ class EverConverter(object):
             note_dict['content'] = ''
             content = note.xpath('content')
             if content:
-                converted_text = self._convert_html_markdown(
-                    title, content[0].text)
+                raw_text = content[0].text
+                converted_text = self._convert_html_markdown(title, raw_text)
                 if self.fmt == 'csv':
                     # XXX: DictWriter can't handle unicode. Just
                     #      ignoring the problem for now.
