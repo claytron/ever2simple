@@ -52,6 +52,7 @@ class EverConverter(object):
             content = note.xpath('content')
             if content:
                 raw_text = content[0].text
+                # TODO: Option to go to just plain text, no markdown
                 converted_text = self._convert_html_markdown(title, raw_text)
                 if self.fmt == 'csv':
                     # XXX: DictWriter can't handle unicode. Just
