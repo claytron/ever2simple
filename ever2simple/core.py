@@ -54,7 +54,9 @@ class EverConverter(object):
                 html2plain = _html2text(None, "")
                 html2plain.feed("<h1>%s</h1>" % title)
                 html2plain.feed(content[0].text)
-                note_dict['content'] = html2plain.close().encode('ascii', 'ignore')
+                # XXX: dict writer can't handle unicode in python 2
+                note_dict['content'] = html2plain.close().encode(
+                    'ascii', 'ignore')
             notes.append(note_dict)
         return notes
 
