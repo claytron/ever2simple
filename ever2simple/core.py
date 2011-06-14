@@ -47,7 +47,8 @@ class EverConverter(object):
                 SIMPLENOTE_DATE_FMT)
             note_dict['updated'] = parse(updated_string).strftime(
                 SIMPLENOTE_DATE_FMT)
-            note_dict['tags'] = [tag.text for tag in note.xpath('tag')]
+            tags = [tag.text for tag in note.xpath('tag')]
+            note_dict['tags'] = " ".join(tags)
             note_dict['content'] = ''
             content = note.xpath('content')
             if content:
