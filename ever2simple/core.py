@@ -1,4 +1,5 @@
 import os
+import sys
 from ever2simple.converter import EverConverter
 
 
