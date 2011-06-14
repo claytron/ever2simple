@@ -62,6 +62,7 @@ class EverConverter(object):
 
     def convert(self):
         notes = self.prepare_notes()
+        # XXX: have an option to export as JSON here as well
         writer = DictWriter(self.simple_file, FIELDNAMES)
         writer.writerows(notes)
         if self.stdout:
