@@ -54,7 +54,8 @@ class EverConverter(object):
                 converted_text = self._convert_html_markdown(
                     title, content[0].text)
                 if self.fmt == 'csv':
-                    # XXX: dict writer can't handle unicode
+                    # XXX: DictWriter can't handle unicode. Just
+                    #      ignoring the problem for now.
                     converted_text = converted_text.encode('ascii', 'ignore')
                 note_dict['content'] = converted_text
             notes.append(note_dict)
