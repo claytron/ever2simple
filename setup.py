@@ -7,7 +7,7 @@ setup(
     version=version,
     description=(
         "Migrate from evernote to simplenote with markdown formatting"),
-    long_description="""TODO""",
+    long_description=open("README.rst").read(),
     # Get strings from http://pypi.python.org/pypi?%3Aaction=list_classifiers
     classifiers=[],
     keywords='note taking migration',
