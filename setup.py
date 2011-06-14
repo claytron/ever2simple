@@ -18,7 +18,11 @@ setup(
     packages=find_packages(exclude=['ez_setup', 'examples', 'tests']),
     include_package_data=True,
     zip_safe=False,
-    install_requires=[],
+    install_requires=[
+        'lxml',
+        'python-dateutil',
+        'html2text',
+    ],
     entry_points="""
     [console_scripts]
     ever2simple = ever2simple.core:main
