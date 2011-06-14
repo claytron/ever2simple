@@ -12,9 +12,8 @@ def main():
     if not os.path.exists(filepath):
         print 'File does not exist: %s' % filepath
         sys.exit(1)
-    with open(filepath, 'rw') as enex_file:
-        converter = EverConverter(enex_file)
-        converter.convert()
+    converter = EverConverter(filepath)
+    converter.convert()
     sys.exit()
 
 
