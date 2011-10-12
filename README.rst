@@ -25,7 +25,7 @@ Installation
 ------------
 
 You can easily install this package using ``easy_install`` or ``pip`` as
-follows::
+follows (preferably in a virtualenv)::
 
     $ pip install -U ever2simple
 
