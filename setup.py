@@ -24,7 +24,7 @@ setup(
     zip_safe=False,
     install_requires=[
         'lxml',
-        'python-dateutil',
+        'python-dateutil<2.0',
         'html2text',
     ],
     entry_points="""
