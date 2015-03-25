@@ -25,7 +25,8 @@ class EverConverter(object):
 
     def _load_xml(self, enex_file):
         try:
-            xml_tree = etree.parse(enex_file)
+            parser = etree.XMLParser(huge_tree=True)
+            xml_tree = etree.parse(enex_file, parser)
         except (etree.XMLSyntaxError, ), e:
             print 'Could not parse XML'
             print e
