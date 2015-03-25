@@ -4,7 +4,7 @@ import sys
 from csv import DictWriter
 from cStringIO import StringIO
 from dateutil.parser import parse
-from html2text import _html2text
+from html2text import HTML2Text
 from lxml import etree
 
 
@@ -78,7 +78,7 @@ class EverConverter(object):
             self._convert_json(notes)
 
     def _convert_html_markdown(self, title, text):
-        html2plain = _html2text(None, "")
+        html2plain = HTML2Text(None, "")
         html2plain.feed("<h1>%s</h1>" % title)
         html2plain.feed(text)
         return html2plain.close()
