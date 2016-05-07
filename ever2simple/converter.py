@@ -20,7 +20,9 @@ class EverConverter(object):
         self.stdout = False
         if simple_filename is None:
             self.stdout = True
-        self.simple_filename = simple_filename
+            self.simple_filename = simple_filename
+        else:
+            self.simple_filename = os.path.expanduser(simple_filename)
         self.fmt = fmt
 
     def _load_xml(self, enex_file):
@@ -80,6 +82,8 @@ class EverConverter(object):
             self._convert_csv(notes)
         if self.fmt == 'json':
             self._convert_json(notes)
+        if self.fmt == 'dir':
+            self._convert_dir(notes)
 
     def _convert_html_markdown(self, title, text):
         html2plain = HTML2Text(None, "")
@@ -104,4 +108,19 @@ class EverConverter(object):
         if self.simple_filename is None:
             sys.stdout.write(json.dumps(notes))
         else:
-            json.dump(notes, self.simple_filename)
+            with open(self.simple_filename, 'w') as output_file:
+                json.dump(notes, output_file)
+
+    def _convert_dir(self, notes):
+        if self.simple_filename is None:
+            sys.stdout.write(json.dumps(notes))
+        else:
+            if os.path.exists(self.simple_filename) and not os.path.isdir(self.simple_filename):
+                print '"%s" exists but is not a directory. %s' % self.simple_filename
+                sys.exit(1)
+            elif not os.path.exists(self.simple_filename):
+                os.makedirs(self.simple_filename)
+            for i, note in enumerate(notes):
+                output_file_path = os.path.join(self.simple_filename, str(i) + '.txt')
+                with open(output_file_path, 'w') as output_file:
+                    output_file.write(note['content'].encode(encoding='utf-8'))
