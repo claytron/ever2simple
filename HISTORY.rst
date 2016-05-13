@@ -1,6 +1,14 @@
 Changes
 =======
 
+2.0 (2016-03-13)
+----------------
+
+- Update to output text files to a directory.
+  [tiangolo]
+- Fix ``created`` and ``updated`` date parsing.
+  [austinjp]
+
 1.1 (2015-03-25)
 ----------------
 
