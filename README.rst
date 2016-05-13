@@ -8,9 +8,9 @@ its name, is a much simpler approach. It just stores your plain text
 notes, and that is it.
 
 This package installs a script to help you migrate from Evernote into
-Simplenote using the standard Simplenote import options. The script
-will take an Evernote ``enex`` export and turn it into a ``json`` or
-``csv`` file compatible with Simplenote.
+Simplenote by exporting the notes as files. The script
+will take an Evernote ``enex`` export and turn it into a ``json``, ``csv`` or
+directory of ``*.txt`` files.
 
 The html that is provided by Evernote is processed by the html2text_
 library. This transforms the html into Markdown_. The Simplenote web UI
@@ -29,6 +29,21 @@ follows (preferably in a virtualenv)::
 
     $ pip install -U ever2simple
 
+Development Installation
+------------------------
+
+Clone this repository with ``git``::
+
+    $ git clone https://github...
+
+Enter the code directory::
+
+    $ cd ever2simple
+
+Install live preserving local changes to the code::
+
+    $ pip install -e .
+
 Usage
 -----
 
@@ -38,25 +53,65 @@ This can be done from the desktop client. You can select the notes you
 want to export, then ``Export Notes to Archive...``, and select the
 ``enex`` format.
 
-Once you have that, you can run the script on the file::
+Once you have that, you can run the script on the file setting the ``--output``
+to a directory and using ``dir`` as the parameter to ``--format``::
 
-    $ ever2simple my_evernote.enex > simplenote.json
+    $ ever2simple my_evernote.enex --output simplenote_dir --format dir
 
-Right now it just outputs the data to ``stdout``, so you can just output
-directly to the file of your choosing (in this case ``simplenote.json``).
+That will output each note in a ``*.txt`` file named by a number to the
+``simplenote_dir`` directory (creating it if it doesn't exist).
 
-Now you can go to the Simplenote website and import the newly created
-``json`` file.
+You can now request Simplenote's support to enable Dropbox synchronization
+to your account here: https://simplenote.com/contact-us/
+
+Once they enable Dropbox synchronization for you, go to
+https://app.simplenote.com/settings and configure it (in the last section).
+
+After that, copy your converted ``*.txt`` note files to your Simplenote
+directory inside your Dropbox and synchronize them from
+https://app.simplenote.com/settings.
+
+
+If you want to export to CSV you can pass ``csv`` to the ``--format``
+parameter::
+
+    $ ever2simple my_evernote.enex --output simplenote.csv --format csv
+
+If you want to export to JSON you can pass ``json`` to the ``--format``
+parameter (or just don't use that parameter as ``json`` is the default)::
+
+    $ ever2simple my_evernote.enex --output simplenote.json --format json
+
+Command Line Help
+-----------------
+
+The help given by running ``ever2simple -h``::
+
+
+    usage: ever2simple [-h] [-o OUTPUT] [-f {json,csv,dir}] enex-file
+
+    Convert Evernote.enex files to Markdown
+
+    positional arguments:
+      enex-file             the path to the Evernote.enex file
+
+    optional arguments:
+      -h, --help            show this help message and exit
+      -o OUTPUT, --output OUTPUT
+                            the path to the output file or directory, leave black
+                            to output to the terminal (stdout) (default: None)
+      -f {json,csv,dir}, --format {json,csv,dir}
+                            the output format, json, csv or a directory (default:
+                            json)
+
 
 Notes and Caveats
 -----------------
 
-There are some issues that you should be aware of when importing your
-notes.
+- Simplenote no longer supports JSON and CSV imports, only text files via
+  Dropbox.
 
-- There is already an Evernote importer on the Simplenote website, why
-  did you write this? A: The current enex importer is very badly broken
-  and duplicates your notes over and over. It is not recommended.
+- Exporting to a directory will not preserve tags in the notes.
 
 - This does not handle any attachments since simplenote doesn't support
   them. This script does not ignore the note that has attachments. This
@@ -86,9 +141,5 @@ TODO
 ----
 
 - Write some basic tests
-- Finish out the command line options
-  - Output file
-  - stdout option
-  - csv output
 - Unicode for ``DictWriter``
 - Test on Python 3
