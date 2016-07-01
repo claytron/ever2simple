@@ -13,7 +13,7 @@ class EverConverter(object):
     """
 
     fieldnames = ['createdate', 'modifydate', 'content', 'tags']
-    date_fmt = '%h %d %Y %H:%M:%S'
+    date_fmt = '%b %d %Y %H:%M:%S'
 
     def __init__(self, enex_filename, simple_filename=None, fmt='json'):
         self.enex_filename = os.path.expanduser(enex_filename)
