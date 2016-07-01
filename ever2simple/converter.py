@@ -1,6 +1,8 @@
 import json
 import os
 import sys
+import datetime
+import pytz
 from csv import DictWriter
 from cStringIO import StringIO
 from dateutil.parser import parse
@@ -15,7 +17,7 @@ class EverConverter(object):
     fieldnames = ['createdate', 'modifydate', 'content', 'tags']
     date_fmt = '%h %d %Y %H:%M:%S'
 
-    def __init__(self, enex_filename, simple_filename=None, fmt='json'):
+    def __init__(self, enex_filename, simple_filename=None, fmt='json', epoch=False):
         self.enex_filename = os.path.expanduser(enex_filename)
         self.stdout = False
         if simple_filename is None:
@@ -24,6 +26,7 @@ class EverConverter(object):
         else:
             self.simple_filename = os.path.expanduser(simple_filename)
         self.fmt = fmt
+        self.epoch = epoch
 
     def _load_xml(self, enex_file):
         try:
@@ -49,8 +52,12 @@ class EverConverter(object):
             updated_string = created_string
             if note.xpath('updated'):
                 updated_string = parse(note.xpath('updated')[0].text)
-            note_dict['createdate'] = created_string.strftime(self.date_fmt)
-            note_dict['modifydate'] = updated_string.strftime(self.date_fmt)
+            if self.epoch:
+                note_dict['createdate'] = int((created_string - datetime.datetime(1970,1,1,tzinfo=pytz.utc)).total_seconds())
+                note_dict['modifydate'] = int((updated_string - datetime.datetime(1970,1,1,tzinfo=pytz.utc)).total_seconds())
+            else:
+                note_dict['createdate'] = created_string.strftime(self.date_fmt)
+                note_dict['modifydate'] = updated_string.strftime(self.date_fmt)
             tags = [tag.text for tag in note.xpath('tag')]
             if self.fmt == 'csv':
                 tags = " ".join(tags)
