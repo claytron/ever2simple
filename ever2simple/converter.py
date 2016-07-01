@@ -12,8 +12,8 @@ class EverConverter(object):
     """Evernote conversion runner
     """
 
-    fieldnames = ['createdate', 'modifydate', 'content', 'tags']
-    date_fmt = '%h %d %Y %H:%M:%S'
+    fieldnames = ['createdate', 'modifydate', 'content', 'tags', 'resources']
+    date_fmt = '%Y %m %d %H:%M:%S'
 
     def __init__(self, enex_filename, simple_filename=None, fmt='json'):
         self.enex_filename = os.path.expanduser(enex_filename)
@@ -39,10 +39,22 @@ class EverConverter(object):
         notes = []
         raw_notes = xml_tree.xpath('//note')
         for note in raw_notes:
+
             note_dict = {}
             title = note.xpath('title')[0].text
             # Use dateutil to figure out these dates
             # 20110610T182917Z
+            resources = []
+            for resource in note.xpath("resource"):
+                mime = resource.xpath("mime")[0].text
+                if mime == "image/png" or "image/jpeg":
+                    try:
+                        r_title = resource.xpath("resource-attributes")[0].xpath("file-name")[0].text
+                        data = resource.xpath("data")[0].text
+                        resources.append({"filename": r_title, "data": data})
+                    except IndexError:
+                        pass
+            note_dict['resources'] = resources
             created_string = parse('19700101T000017Z')
             if note.xpath('created'):
                 created_string = parse(note.xpath('created')[0].text)
@@ -122,5 +134,11 @@ class EverConverter(object):
                 os.makedirs(self.simple_filename)
             for i, note in enumerate(notes):
                 output_file_path = os.path.join(self.simple_filename, str(i) + '.txt')
+
+                for resource in note['resources']:
+                    resource_output_path = os.path.join(self.simple_filename, str(i) + "-" + resource['filename'])
+                    rh = open(resource_output_path, "wb")
+                    rh.write(resource["data"].decode("base64"))
+                    rh.close()
                 with open(output_file_path, 'w') as output_file:
                     output_file.write(note['content'].encode(encoding='utf-8'))
