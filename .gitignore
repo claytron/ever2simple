@@ -1,2 +1,6 @@
 dist
 /env/
+.idea
+*.json
+*.pyc
+*.egg-info/
