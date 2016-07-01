@@ -113,14 +113,14 @@ class EverConverter(object):
 
     def _convert_json(self, notes):
         if self.simple_filename is None:
-            sys.stdout.write(json.dumps(notes))
+            sys.stdout.write(json.dumps(notes, sort_keys=True, indent=4, separators=(',', ': ')))
         else:
             with open(self.simple_filename, 'w') as output_file:
-                json.dump(notes, output_file)
+                json.dump(notes, output_file, sort_keys=True, indent=4, separators=(',', ': '))
 
     def _convert_dir(self, notes):
         if self.simple_filename is None:
-            sys.stdout.write(json.dumps(notes))
+            sys.stdout.write(json.dumps(notes, sort_keys=True, indent=4, separators=(',', ': ')))
         else:
             if os.path.exists(self.simple_filename) and not os.path.isdir(self.simple_filename):
                 print '"%s" exists but is not a directory. %s' % self.simple_filename
