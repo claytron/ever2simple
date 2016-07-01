@@ -26,6 +26,7 @@ setup(
         'lxml',
         'python-dateutil<2.0',
         'html2text',
+        'pytz'
     ],
     entry_points="""
     [console_scripts]

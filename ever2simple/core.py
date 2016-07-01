@@ -9,6 +9,7 @@ def main():
     parser.add_argument('enex-file', help="the path to the Evernote.enex file")
     parser.add_argument('-o', '--output', help="the path to the output file or directory, leave black to output to the terminal (stdout)")
     parser.add_argument('-f', '--format', help="the output format, json, csv or a directory", choices=['json', 'csv', 'dir'], default='json')
+    parser.add_argument('-e', '--epoch', help="Write dates UNIX timestamp format", action="store_true")
     args = parser.parse_args()
     enex_file = vars(args)['enex-file']
     output = args.output
@@ -17,7 +18,7 @@ def main():
     if not os.path.exists(filepath):
         print 'File does not exist: %s' % filepath
         sys.exit(1)
-    converter = EverConverter(filepath, simple_filename=output, fmt=fmt)
+    converter = EverConverter(filepath, simple_filename=output, fmt=fmt, epoch=args.epoch)
     converter.convert()
     sys.exit()
 
