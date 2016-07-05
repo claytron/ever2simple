@@ -36,20 +36,23 @@ class EverConverter(object):
         return xml_tree
 
     def prepare_notes(self, xml_tree):
-        notes = []
+        map_notes = {}
         raw_notes = xml_tree.xpath('//note')
         for note in raw_notes:
             note_dict = {}
             title = note.xpath('title')[0].text
             # Use dateutil to figure out these dates
             # 20110610T182917Z
-            created_string = parse('19700101T000017Z')
+            created_string_raw = '19700101T000017Z'
+            created_string = parse(created_string_raw)
             if note.xpath('created'):
                 created_string = parse(note.xpath('created')[0].text)
+                created_string_raw = note.xpath('created')[0].text
             updated_string = created_string
             if note.xpath('updated'):
                 updated_string = parse(note.xpath('updated')[0].text)
             note_dict['createdate'] = created_string.strftime(self.date_fmt)
+            note_dict['created_string_raw'] = created_string_raw
             note_dict['modifydate'] = updated_string.strftime(self.date_fmt)
             tags = [tag.text for tag in note.xpath('tag')]
             if self.fmt == 'csv':
@@ -66,8 +69,8 @@ class EverConverter(object):
                     #      ignoring the problem for now.
                     converted_text = converted_text.encode('ascii', 'ignore')
                 note_dict['content'] = converted_text
-            notes.append(note_dict)
-        return notes
+            map_notes.setdefault(created_string_raw,[]).append(note_dict)
+        return map_notes
 
     def convert(self):
         if not os.path.exists(self.enex_filename):
@@ -111,8 +114,13 @@ class EverConverter(object):
             with open(self.simple_filename, 'w') as output_file:
                 json.dump(notes, output_file)
 
-    def _convert_dir(self, notes):
+    def _convert_dir(self, map_notes):
         if self.simple_filename is None:
+            # regenerate notes from map_notes here for backward compatibility
+            notes = []
+            for k, v in map_notes.iteritems():
+              for note_dict in v:
+                notes.append(note_dict)
             sys.stdout.write(json.dumps(notes))
         else:
             if os.path.exists(self.simple_filename) and not os.path.isdir(self.simple_filename):
@@ -120,7 +128,12 @@ class EverConverter(object):
                 sys.exit(1)
             elif not os.path.exists(self.simple_filename):
                 os.makedirs(self.simple_filename)
-            for i, note in enumerate(notes):
-                output_file_path = os.path.join(self.simple_filename, str(i) + '.txt')
-                with open(output_file_path, 'w') as output_file:
-                    output_file.write(note['content'].encode(encoding='utf-8'))
+            k = map_notes.keys()
+            k.sort()
+            i = 0
+            for created_string_raw in k:
+                for note in map_notes[created_string_raw]:
+                    i += 1
+                    output_file_path = os.path.join(self.simple_filename, str(i) + '.txt')
+                    with open(output_file_path, 'w') as output_file:
+                        output_file.write(note['content'].encode(encoding='utf-8'))
