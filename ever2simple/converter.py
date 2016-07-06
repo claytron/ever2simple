@@ -159,5 +159,5 @@ class EverConverter(object):
                         self.simple_filename,
                         "title_fail" + '-' + str(i) + '.txt')
                     with open(output_file_path, 'w') as output_file:
-                        output_file.write(
-                            note['content'].encode(encoding='utf-8'))
+                        output_file.write(note['content'])
+
