@@ -152,12 +152,12 @@ class EverConverter(object):
                     output_file_path = \
                         os.path.join(self.simple_filename, note_title + '.txt')
                     with open(output_file_path, 'w') as output_file:
-                        output_file.write(
-                            note['content'].encode(encoding='utf-8'))
-                except:
+                        output_file.write(note['content'])
+                except Exception as e:
                     output_file_path = os.path.join(
                         self.simple_filename,
                         "title_fail" + '-' + str(i) + '.txt')
+                    print("failed to use title for filename: {}".format(e))
                     with open(output_file_path, 'w') as output_file:
                         output_file.write(note['content'])
 
