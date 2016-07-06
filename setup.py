@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-version = '2.0'
+version = '2.1'
 
 setup(
     name='ever2simple',
@@ -24,7 +24,7 @@ setup(
     zip_safe=False,
     install_requires=[
         'lxml',
-        'python-dateutil<2.0',
+        'python-dateutil>=2.0',
         'html2text',
     ],
     entry_points="""
