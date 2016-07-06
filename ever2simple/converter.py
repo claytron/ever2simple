@@ -1,8 +1,14 @@
+from __future__ import print_function
+from __future__ import unicode_literals
+from __future__ import division
+from __future__ import absolute_import
+from builtins import open
+from builtins import str
 import json
 import os
 import sys
 from csv import DictWriter
-from cStringIO import StringIO
+from io import StringIO
 from dateutil.parser import parse
 from html2text import HTML2Text
 from lxml import etree
@@ -32,9 +38,9 @@ class EverConverter(object):
         try:
             parser = etree.XMLParser(huge_tree=True)
             xml_tree = etree.parse(enex_file, parser)
-        except (etree.XMLSyntaxError, ), e:
-            print 'Could not parse XML'
-            print e
+        except (etree.XMLSyntaxError, ) as e:
+            print('Could not parse XML')
+            print(e)
             sys.exit(1)
         return xml_tree
 
@@ -71,13 +77,13 @@ class EverConverter(object):
                     converted_text = converted_text.encode('ascii', 'ignore')
                 note_dict['content'] = converted_text
                 if self.verbose:
-                    print "note_dict: %s" % (note_dict)
+                    print("note_dict: {}".format(note_dict))
             notes.append(note_dict)
         return notes
 
     def convert(self):
         if not os.path.exists(self.enex_filename):
-            print "File does not exist: %s" % self.enex_filename
+            print("File does not exist: {}".format(self.enex_filename))
             sys.exit(1)
         # TODO: use with here, but pyflakes barfs on it
         enex_file = open(self.enex_filename)
@@ -123,8 +129,8 @@ class EverConverter(object):
         else:
             if (os.path.exists(self.simple_filename) and
                     not os.path.isdir(self.simple_filename)):
-                print ('"%s" exists but is not a directory. %s'
-                       % self.simple_filename)
+                print('"{}" exists but is not a directory.'.format(
+                  self.simple_filename))
                 sys.exit(1)
             elif not os.path.exists(self.simple_filename):
                 os.makedirs(self.simple_filename)
@@ -153,5 +159,5 @@ class EverConverter(object):
                         self.simple_filename,
                         "title_fail" + '-' + str(i) + '.txt')
                     with open(output_file_path, 'w') as output_file:
-                        output_file.write(
-                            note['content'].encode(encoding='utf-8'))
+                        output_file.write(note['content'])
+
