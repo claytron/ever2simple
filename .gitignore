@@ -1,2 +1,4 @@
 dist
 /env/
+ever2simple.egg-info
+ever2simple/__pycache__

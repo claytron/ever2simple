@@ -1,8 +1,16 @@
+from __future__ import print_function
+from __future__ import unicode_literals
+from __future__ import division
+from __future__ import absolute_import
+from builtins import open
+from builtins import str
+from future import standard_library
+standard_library.install_aliases()
 import json
 import os
 import sys
 from csv import DictWriter
-from cStringIO import StringIO
+from io import StringIO
 from dateutil.parser import parse
 from html2text import HTML2Text
 from lxml import etree
@@ -29,9 +37,9 @@ class EverConverter(object):
         try:
             parser = etree.XMLParser(huge_tree=True)
             xml_tree = etree.parse(enex_file, parser)
-        except (etree.XMLSyntaxError, ), e:
-            print 'Could not parse XML'
-            print e
+        except (etree.XMLSyntaxError, ) as e:
+            print('Could not parse XML')
+            print(e)
             sys.exit(1)
         return xml_tree
 
@@ -71,7 +79,7 @@ class EverConverter(object):
 
     def convert(self):
         if not os.path.exists(self.enex_filename):
-            print "File does not exist: %s" % self.enex_filename
+            print("File does not exist: %s" % self.enex_filename)
             sys.exit(1)
         # TODO: use with here, but pyflakes barfs on it
         enex_file = open(self.enex_filename)
@@ -116,7 +124,7 @@ class EverConverter(object):
             sys.stdout.write(json.dumps(notes))
         else:
             if os.path.exists(self.simple_filename) and not os.path.isdir(self.simple_filename):
-                print '"%s" exists but is not a directory. %s' % self.simple_filename
+                print('"%s" exists but is not a directory. %s' % self.simple_filename)
                 sys.exit(1)
             elif not os.path.exists(self.simple_filename):
                 os.makedirs(self.simple_filename)

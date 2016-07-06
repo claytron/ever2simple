@@ -1,3 +1,9 @@
+from __future__ import print_function
+from __future__ import unicode_literals
+from __future__ import division
+from __future__ import absolute_import
+from future import standard_library
+standard_library.install_aliases()
 import os
 import sys
 from ever2simple.converter import EverConverter
@@ -15,7 +21,7 @@ def main():
     fmt = args.format
     filepath = os.path.expanduser(enex_file)
     if not os.path.exists(filepath):
-        print 'File does not exist: %s' % filepath
+        print('File does not exist: {}'.format(filepath))
         sys.exit(1)
     converter = EverConverter(filepath, simple_filename=output, fmt=fmt)
     converter.convert()
