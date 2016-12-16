@@ -88,7 +88,7 @@ Command Line Help
 The help given by running ``ever2simple -h``::
 
 
-    usage: ever2simple [-h] [-o OUTPUT] [-f {json,csv,dir}] enex-file
+    usage: ever2simple [-h] [-o OUTPUT] [-t] [-f {json,csv,dir}] enex-file
 
     Convert Evernote.enex files to Markdown
 
@@ -100,6 +100,8 @@ The help given by running ``ever2simple -h``::
       -o OUTPUT, --output OUTPUT
                             the path to the output file or directory, leave black
                             to output to the terminal (stdout) (default: None)
+      -t, --title           use the title of the note for the filename of the
+                            generated file (default: False)
       -f {json,csv,dir}, --format {json,csv,dir}
                             the output format, json, csv or a directory (default:
                             json)
