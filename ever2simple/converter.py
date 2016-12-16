@@ -1,6 +1,7 @@
 import json
 import os
 import sys
+import re
 from csv import DictWriter
 from cStringIO import StringIO
 from dateutil.parser import parse
@@ -14,8 +15,9 @@ class EverConverter(object):
 
     fieldnames = ['createdate', 'modifydate', 'content', 'tags']
     date_fmt = '%h %d %Y %H:%M:%S'
+    title_space_char = '_'
 
-    def __init__(self, enex_filename, simple_filename=None, fmt='json'):
+    def __init__(self, enex_filename, simple_filename=None, fmt='json', titles_as_filenames=None):
         self.enex_filename = os.path.expanduser(enex_filename)
         self.stdout = False
         if simple_filename is None:
@@ -24,6 +26,7 @@ class EverConverter(object):
         else:
             self.simple_filename = os.path.expanduser(simple_filename)
         self.fmt = fmt
+        self.titles_as_filenames = titles_as_filenames
 
     def _load_xml(self, enex_file):
         try:
@@ -41,6 +44,7 @@ class EverConverter(object):
         for note in raw_notes:
             note_dict = {}
             title = note.xpath('title')[0].text
+            note_dict['title'] = title
             # Use dateutil to figure out these dates
             # 20110610T182917Z
             created_string = parse('19700101T000017Z')
@@ -121,6 +125,9 @@ class EverConverter(object):
             elif not os.path.exists(self.simple_filename):
                 os.makedirs(self.simple_filename)
             for i, note in enumerate(notes):
-                output_file_path = os.path.join(self.simple_filename, str(i) + '.txt')
+                filename = str(i)
+                if self.titles_as_filenames is not None:
+                    filename = re.sub(r'\W+', self.title_space_char, note['title'])
+                output_file_path = os.path.join(self.simple_filename, filename + '.txt')
                 with open(output_file_path, 'w') as output_file:
                     output_file.write(note['content'].encode(encoding='utf-8'))
